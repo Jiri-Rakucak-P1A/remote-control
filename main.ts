@@ -1,69 +1,88 @@
 let accX = 0
-let accY = 0
-let calibratedX = 0
-let calibratedY = 0
-let block1 = 0
-let stop = 0
 radio.setGroup(160)
-basic.forever(function () {
-    accX = input.acceleration(Dimension.X)
-    accY = input.acceleration(Dimension.Y)
-    if (block1 === 1){
-        if (accY > 0){
-            if (Math.abs(accY) > 250 || Math.abs(accY) < 500){
-                radio.sendValue("GOL", 60)
-                radio.sendValue("GOR", 45)
-            }
-            if (Math.abs(accY) > 500 || Math.abs(accY) < 750) {
-                radio.sendValue("GOL", 120)
-                radio.sendValue("GOR", 105)
-            }
-            if (Math.abs(accY) > 750 || Math.abs(accY) < 1000) {
-                radio.sendValue("GOL", 180)
-                radio.sendValue("GOR", 165)
-            }
-            if (Math.abs(accY) > 1000) {
-                radio.sendValue("GOL", 255)
-                radio.sendValue("GOR", 240)
-            }
-        }
-        if (accY < 0) {
-            if (Math.abs(accY) > 250) {
-                radio.sendValue("ReverseL", -240)
-                radio.sendValue("ReverseR", -255)
-            }
-            if (Math.abs(accY) > 500) {
-                radio.sendValue("ReverseL", -240)
-                radio.sendValue("ReverseR", -255)
-            }
-            if (Math.abs(accY) > 750) {
-                radio.sendValue("ReverseL", -240)
-                radio.sendValue("ReverseR", -255)
-            }
-            if (Math.abs(accY) > 1000) {
-                radio.sendValue("ReverseL", -240)
-                radio.sendValue("ReverseR", -255)
-            }
-            
-        }
-        if (accX < 0){
-            if (Math.abs(accX) > 250) { radio.sendValue("Left", 120)}
-        }
-        if (accX > 0) {
-            if (Math.abs(accX) > 250) { radio.sendValue("Right", 120) }
-        }
+let speed = game.createSprite(2, 2)
+let x = 0
+
+input.onButtonPressed(Button.AB, function() {
+    if (x === 0){
+        x++
+        radio.sendString("Go")
+    }
+    else {
+        radio.sendString("Stop")
+        speed.delete()
+        speed = game.createSprite(2, 2)
+        x = 0
+    }
+    
+
+    
+})
+
+let q = 0
+let w = 0
+
+input.onButtonPressed(Button.A, function() {
+    if (q === 2){
+        q = q*0
+        radio.sendString("Stop")
+        speed.delete()
+        speed = game.createSprite(2, 2)
+    }
+    if (q === 1){
+        radio.sendValue("nasobitel", -1)
+        speed.move(-1)
+        q + 1
+    }
+    if (q===0){
+        radio.sendValue("nasobitel", -0.6)
+        speed.move(-1)
+        console.log("up")
+        q + 1
     }
     
 })
+input.onButtonPressed(Button.B, function () {
+    if (w === 2) {
+        w = w * 0
+        radio.sendString("Stop")
+        speed.delete()
+        speed = game.createSprite(2, 2)
 
-input.onButtonPressed(Button.AB, function() {
-    calibratedX = accX
-    calibratedY = accY
-    block1 = 1
-    if (stop === 0) {stop++}
-    if (stop === 1) {stop=0;radio.sendString("Stop")}
-    
+    }
+    if (w === 1) {
+        radio.sendValue("nasobitel", 1)
+        speed.move(1)
+        w + 1
+    }
+    if (w === 0){
+        radio.sendValue("nasobitel", 0.6)
+        speed.move(1)
+        w + 1
+    }
 })
 
 
 
+
+
+
+
+basic.forever(function() {
+    accX = input.acceleration(Dimension.X)
+    if (accX < -300){
+        radio.sendString("L")
+    }
+    else{
+        radio.sendString("LGo")
+    }
+    if(accX > 300){
+        radio.sendString("R")
+    }
+    else{
+        radio.sendString("RGo")
+    }
+    
+
+basic.pause(50)
+})
