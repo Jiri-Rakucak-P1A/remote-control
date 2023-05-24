@@ -3,27 +3,26 @@ radio.setGroup(160)
 let speed = game.createSprite(2, 2)
 let x = 0
 
+
 input.onButtonPressed(Button.AB, function() {
     radio.sendString("Stop")
     speed.delete()
     speed = game.createSprite(2, 2)
-    radio.sendValue("nasobitel", 0)
-
-    
-    
-    
-
-    
+    radio.sendValue("n", 0)
 })
 
 let nasobitel = 0
+let a = 0
+let b = 0
 
 input.onButtonPressed(Button.A, function() {
-    radio.sendValue("nasobitel", -1)
-    
+    radio.sendValue("n", -1)
+    speed.move(-1)
 })
+
 input.onButtonPressed(Button.B, function () {
-    radio.sendValue("nasobitel", 1)
+    radio.sendValue("n", 1)
+    speed.move(1)
 })
 
 
